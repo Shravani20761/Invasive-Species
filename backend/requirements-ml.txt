@@ -1,0 +1,5 @@
+# Optional production inference dependencies.
+# The application runs without these. Install them when you have trained weights.
+torch>=2.5
+torchvision>=0.20
+ultralytics>=8.3

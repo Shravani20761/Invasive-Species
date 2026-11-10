@@ -1,0 +1,31 @@
+from app.models.entities import (
+    Alert,
+    AuditLog,
+    Base,
+    Cluster,
+    ModelMetadata,
+    Prediction,
+    SensitiveRegion,
+    Setting,
+    Sighting,
+    Species,
+    User,
+    VerificationRecord,
+    cluster_sightings,
+)
+
+__all__ = [
+    "Alert",
+    "AuditLog",
+    "Base",
+    "Cluster",
+    "ModelMetadata",
+    "Prediction",
+    "SensitiveRegion",
+    "Setting",
+    "Sighting",
+    "Species",
+    "User",
+    "VerificationRecord",
+    "cluster_sightings",
+]

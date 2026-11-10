@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-size: 18px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #e8f2e9;
+  color: #123c2d;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  font-family: "Times New Roman", Times, serif;
+  background: #d0e5ce;
+}
+
+.isr-pin span {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(18, 60, 45, 0.45);
+}
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background-color: rgba(27, 81, 60, 0.25) !important;
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background-color: #1b513c !important;
+  color: white !important;
+}

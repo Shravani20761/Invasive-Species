@@ -1,9 +1,11 @@
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api.router import api_router
@@ -58,6 +60,20 @@ def create_app() -> FastAPI:
             "postgis": postgis_enabled(),
             "inference_mode": get_settings().inference_mode,
         }
+
+    frontend_dist = Path(os.environ.get("FRONTEND_DIST", ""))
+    index_file = frontend_dist / "index.html"
+    if index_file.is_file():
+
+        @app.get("/{full_path:path}", include_in_schema=False)
+        def frontend(full_path: str):
+            root = frontend_dist.resolve()
+            candidate = (frontend_dist / full_path).resolve() if full_path else index_file
+            if full_path and root in candidate.parents and candidate.is_file():
+                return FileResponse(candidate)
+            if not index_file.is_file():
+                raise HTTPException(status_code=404)
+            return FileResponse(index_file)
 
     return app
 

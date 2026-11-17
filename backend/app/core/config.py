@@ -1,9 +1,13 @@
 """Runtime configuration. Secrets come from the environment or a root .env file."""
 
+import logging
+import secrets
 from functools import lru_cache
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger("invasive_species_radar")
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
 ROOT_DIR = BACKEND_DIR.parent
@@ -40,7 +44,12 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     settings = Settings()
     if settings.environment == "production" and settings.secret_key.startswith("dev-"):
-        raise RuntimeError("Set SECRET_KEY before running with ENVIRONMENT=production.")
+        settings = settings.model_copy(update={"secret_key": secrets.token_urlsafe(48)})
+        logger.warning(
+            "SECRET_KEY is unset while ENVIRONMENT=production. "
+            "Using a process-local key, so logins end when the process restarts. "
+            "Set SECRET_KEY on the host for a stable key."
+        )
     if settings.inference_mode not in {"demo", "weights"}:
         raise RuntimeError("INFERENCE_MODE must be 'demo' or 'weights'.")
     return settings

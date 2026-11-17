@@ -18,12 +18,11 @@ def configure_engine(database_url: str) -> Engine:
 
 @event.listens_for(Engine, "connect")
 def _enable_sqlite_foreign_keys(dbapi_connection, _connection_record) -> None:
-    try:
-        cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA foreign_keys=ON")
-        cursor.close()
-    except Exception:
+    if dbapi_connection.__class__.__module__.split(".")[0] != "sqlite3":
         return
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 
 def get_db() -> Generator[Session, None, None]:

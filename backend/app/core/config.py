@@ -50,6 +50,6 @@ def get_settings() -> Settings:
             "Using a process-local key, so logins end when the process restarts. "
             "Set SECRET_KEY on the host for a stable key."
         )
-    if settings.inference_mode not in {"demo", "weights"}:
-        raise RuntimeError("INFERENCE_MODE must be 'demo' or 'weights'.")
+    if settings.inference_mode not in {"demo", "weights", "bioclip"}:
+        raise RuntimeError("INFERENCE_MODE must be 'demo', 'bioclip', or 'weights'.")
     return settings

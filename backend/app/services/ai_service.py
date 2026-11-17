@@ -20,6 +20,8 @@ def identify_image(image: Image.Image, category: str | None, threshold: float) -
     mode = get_settings().inference_mode
     if mode == "weights":
         result = _predict_weights(image, category, threshold)
+    elif mode == "bioclip":
+        result = _predict_bioclip(image, category, threshold)
     elif category == "plant":
         result = PlantClassifier().predict(image, threshold)
     elif category == "animal":
@@ -34,6 +36,15 @@ def identify_image(image: Image.Image, category: str | None, threshold: float) -
     result["detections"] = ObjectDetector().detect(image)
     result["preprocessing"] = "Pillow RGB resize and OpenCV Gaussian blur when OpenCV is installed."
     return result
+
+
+def _predict_bioclip(image: Image.Image, category: str | None, threshold: float) -> dict:
+    try:
+        from app.ai.bioclip_classifier import predict_image
+
+        return predict_image(image, category, threshold)
+    except (FileNotFoundError, RuntimeError, ValueError, OSError) as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 def _predict_weights(image: Image.Image, category: str | None, threshold: float) -> dict:

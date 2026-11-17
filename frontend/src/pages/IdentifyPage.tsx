@@ -95,7 +95,7 @@ export function IdentifyPage() {
               <p className="mt-4 text-sm leading-6">{result.message}</p>
               <p className="mt-3 text-sm leading-6">{result.description}</p>
               <p className="mt-3 text-xs leading-5 text-muted">{result.demo_notice}</p>
-              <h3 className="mt-4 text-sm font-semibold">Closest signatures</h3>
+              <h3 className="mt-4 text-sm font-semibold">Closest catalogue species</h3>
               <ul className="mt-2 space-y-1 text-sm">
                 {result.alternatives.map((item) => (
                   <li key={item.scientific_name}>{item.common_name} · {formatPercent(item.confidence)}</li>

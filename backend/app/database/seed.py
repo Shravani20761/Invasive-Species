@@ -36,7 +36,7 @@ from app.models.entities import (
 )
 from app.services.clustering_service import analyze_clusters
 from app.services.settings_service import ensure_default_settings, get_app_settings
-from app.services.ai_service import identify_image
+from app.ai.demo_model import predict_image
 
 DEMO_NOTE = "Synthetic demonstration record. Not a field observation."
 DEMO_USERS = (
@@ -188,7 +188,7 @@ def _add_rendered_sighting(db, species: Species, users, point, days_ago, status,
     entry = by_slug()[next(item["slug"] for item in CATALOG if item["scientific_name"] == species.scientific_name)]
     image = Image.fromarray(render_signature(entry, np.random.default_rng(7000 + sequence)))
     threshold = float(get_app_settings(db)["low_confidence_threshold"])
-    result = identify_image(image, species.category, threshold)
+    result = predict_image(image, species.category, threshold)
     if result["insufficient_confidence"] or result["scientific_name"] != species.scientific_name:
         raise RuntimeError(
             "The demo classifier did not recognise its own synthetic signature for "
@@ -201,7 +201,7 @@ def _add_noise_sighting(db, users, point, days_ago, sequence: int) -> None:
     rng = np.random.default_rng(3)
     image = Image.fromarray(rng.integers(0, 256, size=(180, 180, 3), dtype=np.uint8))
     threshold = float(get_app_settings(db)["low_confidence_threshold"])
-    result = identify_image(image, "plant", threshold)
+    result = predict_image(image, "plant", threshold)
     _store_sighting(db, users, image, result, point, days_ago, "pending", "DEMO: unclear photograph sample", None, sequence)
 
 
